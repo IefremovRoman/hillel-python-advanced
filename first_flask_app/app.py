@@ -15,6 +15,7 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 class Customers(db.Model):
+	# __tablename__ = 'customers'
     id = db.Column(db.Integer, primary_key=True)
     FirstName = db.Column(db.String(64), unique=False)
     LastName = db.Column(db.String(64), unique=False)
@@ -22,6 +23,14 @@ class Customers(db.Model):
     
     def __repr__(self):
     	return '<Customers %r>' % self.FirstName
+
+class Sales(db.Model):
+	# __tablename__ = 'sales'
+    id = db.Column(db.Integer, primary_key=True)
+    Transaction_date = db.Column(db.DateTime)
+    Product = db.Column(db.String(64), unique=False)
+    Price = db.Column(db.Integer)
+    Payment_Type = db.Column(db.String(64), unique=False)
 
 @app.route('/')
 def index():
@@ -85,3 +94,10 @@ def astronauts():
 	response = requests.get(url)
 	return f"For now it's {response.json().get('number')} astronauts at the Earth's orbit"
 	# return f"For now it's {len(response.json().get('people'))} astronauts at the Earth's orbit"
+
+@app.route('/summary/')
+def sales():
+	query = db.session.query(Sales.Transaction_date.label("Transaction_date"))
+	result = [row.Transaction_date.date() for row in query.all()]
+	return str(result)
+	#return render_template(template_name_or_list, )
