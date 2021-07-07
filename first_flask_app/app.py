@@ -1,7 +1,9 @@
 from sql_config import Config
 
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+from sqlalchemy import or_
 
 import os
 from math import sqrt
@@ -9,6 +11,7 @@ from statistics import mean
 from faker import Faker
 import csv
 import requests
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,7 +30,7 @@ class Customers(db.Model):
 class Sales(db.Model):
 	# __tablename__ = 'sales'
     id = db.Column(db.Integer, primary_key=True)
-    Transaction_date = db.Column(db.DateTime)
+    Transaction_date = db.Column(db.Date)
     Product = db.Column(db.String(64), unique=False)
     Price = db.Column(db.Integer)
     Payment_Type = db.Column(db.String(64), unique=False)
@@ -96,8 +99,37 @@ def astronauts():
 	# return f"For now it's {len(response.json().get('people'))} astronauts at the Earth's orbit"
 
 @app.route('/summary/')
+def summary():
+
+	query = db.session.query(Sales.Transaction_date.label("Transaction_date"),
+							func.sum(Sales.Price).label("Summary")).group_by(Sales.Transaction_date).all()
+	summary = {i[0].isoformat():i[1] for i in query}
+
+	# return str(query)
+
+	return render_template('summary.html', summary=summary.items())
+
+@app.route('/sales')
 def sales():
-	query = db.session.query(Sales.Transaction_date.label("Transaction_date"))
-	result = [row.Transaction_date.date() for row in query.all()]
-	return str(result)
-	#return render_template(template_name_or_list, )
+	product = request.args.get('product')
+	payment_type = request.args.get('payment_type')
+
+	if not product and not payment_type:
+		query = Sales.query
+
+	elif not product:
+		query = Sales.query.filter(Sales.Payment_Type == payment_type)
+
+	elif not payment_type:
+		query = Sales.query.filter(Sales.Product == product)
+
+	else:
+		query = Sales.query.filter(Sales.Product == product, Sales.Payment_Type == payment_type)
+
+	rows = query.all()
+	headings = ['Transaction date', 'Product', 'Price', 'Payment type']
+	sales = [(row.Transaction_date.isoformat(), row.Product, row.Price, row.Payment_Type) for row in rows]
+	sales.sort(key = lambda x:x[0])
+
+	return render_template('sales.html', sales=sales, headings=headings, product=product, payment_type=payment_type, lenght=len(sales))
+

@@ -19,6 +19,7 @@ def parse_to_lists():
 
 				salestring = row[0].split(';')
 				salestring[0] = datetime.strptime(salestring[0], '%m/%d/%Y %H:%M')
+				salestring[0] = salestring[0].date()
 				salestring[2] = int(salestring[2])
 				sales_records.append(salestring)
 
