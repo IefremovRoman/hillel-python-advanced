@@ -114,17 +114,11 @@ def sales():
 	product = request.args.get('product')
 	payment_type = request.args.get('payment_type')
 
-	if not product and not payment_type:
-		query = Sales.query
-
-	elif not product:
-		query = Sales.query.filter(Sales.Payment_Type == payment_type)
-
-	elif not payment_type:
-		query = Sales.query.filter(Sales.Product == product)
-
-	else:
-		query = Sales.query.filter(Sales.Product == product, Sales.Payment_Type == payment_type)
+	query = Sales.query
+	if product:
+		query = query.filter(Sales.Product == product)
+	if payment_type:
+		query = query.filter(Sales.Payment_Type == payment_type)
 
 	rows = query.all()
 	headings = ['Transaction date', 'Product', 'Price', 'Payment type']
