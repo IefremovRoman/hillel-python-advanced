@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<meta charset="UTF-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  	{% block title %}{% endblock %}
+  </head>
+  <body>
+      <h1>Hello, world!</h1>
+      <h2>Map of site:</h2>
+      <ul>
+        <li>
+          <h3>
+            <a href="{{ url_for('index') }}">Home</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('square_root') }}">Square root calculator</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('unique_names_query_repr') }}">Data base rows counter</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('requirements_view_function') }}">Requirements</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('fake_users') }}">Generate some users</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('mean_height_and_weight') }}">Mean height and weight from csv file</a>
+          </h3>
+        </li>
+
+        <li>
+          <h3>
+            <a href="{{ url_for('astronauts') }}">Current number of astronauts</a>
+          </h3>
+        </li>
+      </ul>
+  </body>
+</html>
