@@ -1,0 +1,21 @@
+<p>Filteing trade base by product='{{ product }}' and payment_type='{{ payment_type }}'</p>
+{% if lenght == 1 %}
+<p>1 record</p>
+{% else %}
+<p>{{ lenght }} records</p>
+{% endif %}
+<table border="1">
+<tr>
+    {% for heading in headings %}
+        <th>{{ heading }}</th>
+    {% endfor %}
+</tr>
+{% for sale in sales %}
+    <tr>
+        {% for val in sale %}
+        <td>{{ val }}</td>
+        {% endfor %}
+    </tr>
+{% endfor %}
+</table>
+<a href="{{ url_for('index') }}">Home</a>

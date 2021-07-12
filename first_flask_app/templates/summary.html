@@ -1,0 +1,26 @@
+<p>Summary of sales for each trade day:</p>
+<table border="1">
+<tr>
+	<th>Day</th>
+	<th>Total amount</th>
+</tr>
+{% for key, value in summary %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+   </tr>
+{% endfor %}
+</table>
+<a href="{{ url_for('index') }}">Home</a>
+
+
+<!-- 
+<div>
+	<ul>
+		{% for key, value in requirements %}
+			<li type="none">
+				{{ key }}=={{ value }}<br>
+			</li>
+		{% endfor %}
+	</ul>
+</div> -->

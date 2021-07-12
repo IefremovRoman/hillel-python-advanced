@@ -1,7 +1,9 @@
 from sql_config import Config
 
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+from sqlalchemy import or_
 
 import os
 from math import sqrt
@@ -10,11 +12,13 @@ from faker import Faker
 import csv
 import requests
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 class Customers(db.Model):
+	# __tablename__ = 'customers'
     id = db.Column(db.Integer, primary_key=True)
     FirstName = db.Column(db.String(64), unique=False)
     LastName = db.Column(db.String(64), unique=False)
@@ -22,6 +26,14 @@ class Customers(db.Model):
     
     def __repr__(self):
     	return '<Customers %r>' % self.FirstName
+
+class Sales(db.Model):
+	# __tablename__ = 'sales'
+    id = db.Column(db.Integer, primary_key=True)
+    Transaction_date = db.Column(db.Date)
+    Product = db.Column(db.String(64), unique=False)
+    Price = db.Column(db.Integer)
+    Payment_Type = db.Column(db.String(64), unique=False)
 
 @app.route('/')
 def index():
@@ -85,3 +97,33 @@ def astronauts():
 	response = requests.get(url)
 	return f"For now it's {response.json().get('number')} astronauts at the Earth's orbit"
 	# return f"For now it's {len(response.json().get('people'))} astronauts at the Earth's orbit"
+
+@app.route('/summary/')
+def summary():
+
+	query = db.session.query(Sales.Transaction_date.label("Transaction_date"),
+							func.sum(Sales.Price).label("Summary")).group_by(Sales.Transaction_date).all()
+	summary = {i[0].isoformat():i[1] for i in query}
+
+	# return str(query)
+
+	return render_template('summary.html', summary=summary.items())
+
+@app.route('/sales')
+def sales():
+	product = request.args.get('product')
+	payment_type = request.args.get('payment_type')
+
+	query = Sales.query
+	if product:
+		query = query.filter(Sales.Product == product)
+	if payment_type:
+		query = query.filter(Sales.Payment_Type == payment_type)
+
+	rows = query.all()
+	headings = ['Transaction date', 'Product', 'Price', 'Payment type']
+	sales = [(row.Transaction_date.isoformat(), row.Product, row.Price, row.Payment_Type) for row in rows]
+	sales.sort(key = lambda x:x[0])
+
+	return render_template('sales.html', sales=sales, headings=headings, product=product, payment_type=payment_type, lenght=len(sales))
+
