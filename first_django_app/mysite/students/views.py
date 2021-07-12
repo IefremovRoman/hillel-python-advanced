@@ -50,7 +50,7 @@ def generate_students(request):
 				student = Student.objects.create(
 												first_name=faker.first_name(), 
 												last_name=faker.last_name(), 
-												age=faker.random_int(min=0, max=100)
+												age=faker.random_int(min=17, max=22)
 												)
 			student_list = Student.objects.all()
 			output = model_pretty_viewer(student_list)
