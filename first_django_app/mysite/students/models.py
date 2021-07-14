@@ -7,10 +7,10 @@ class Student(models.Model):
     age = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.id}' \
-                ' {self.first_name}' \
-                ' {self.last_name}' \
-                '{self.age}'
+        return f'{self.id} \
+                    {self.first_name} \
+                    {self.last_name} \
+                    {self.age}'
 
 
 class Group(models.Model):
@@ -18,9 +18,7 @@ class Group(models.Model):
     teacher_id = models.CharField(max_length=24)
 
     def __str__(self):
-        return f'{self.id}' \
-                '{self.student_id}' \
-                '{self.teacher_id}'
+        return f'{self.id} {self.student_id} {self.teacher_id}'
 
 
 class Teacher(models.Model):
@@ -30,8 +28,8 @@ class Teacher(models.Model):
     subject = models.CharField(max_length=24)
 
     def __str__(self):
-        return f'{self.id}' \
-                '{self.first_name}' \
-                '{self.last_name}' \
-                '{self.age}' \
-                '{self.subject}'
+        return f'{self.id} \
+                    {self.first_name} \
+                    {self.last_name} \
+                    {self.age} \
+                    {self.subject}'

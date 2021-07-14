@@ -89,12 +89,6 @@ def teachers(request):
         if subject:
             query = query.filter(subject=subject)
 
-        # teacher_list = Teacher.objects.filter(
-        #                            first_name=first_name,
-        #                            last_name=last_name,
-        #                            # age=age,
-        #                            subject=subject
-        #                         )
         output = model_pretty_viewer(query)
         return HttpResponse(output)
     return HttpResponse('Method not found')
