@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-# from django.shortcuts import render
+from django.shortcuts import render
 
 from faker import Faker
 
@@ -18,8 +18,7 @@ def model_pretty_viewer(query):
 
 # Viewers
 def index(request):
-    output = 'Hello, world!'
-    return HttpResponse(output)
+    return render(request, 'index.html')
 
 
 def students(request):
@@ -33,7 +32,7 @@ def generate_student(request):
     Student.objects.create(
                             first_name=faker.first_name(),
                             last_name=faker.last_name(),
-                            age=faker.random_int(min=0, max=100)
+                            age=faker.random_int(min=17, max=30)
                             )
     student_list = Student.objects.all()
     output = model_pretty_viewer(student_list)
@@ -55,7 +54,7 @@ def generate_students(request):
                 Student.objects.create(
                                 first_name=faker.first_name(),
                                 last_name=faker.last_name(),
-                                age=faker.random_int(min=17, max=22)
+                                age=faker.random_int(min=17, max=30)
                                 )
         student_list = Student.objects.all()
         output = model_pretty_viewer(student_list)
