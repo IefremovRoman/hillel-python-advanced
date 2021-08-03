@@ -14,6 +14,7 @@ json_file = 'students/management/commands/university_subjects.json'
 
 class Command(BaseCommand):
     def __init__(self):
+        super(Command, self).__init__()
         self.help = 'Generate teachers'
 
     def add_arguments(self, parser):
@@ -24,7 +25,6 @@ class Command(BaseCommand):
         count = kwargs.get('total') if kwargs.get('total') else 100
 
         with open(json_file, 'r') as file:
-
             subjects = json.load(file)
 
         for i in range(count):
