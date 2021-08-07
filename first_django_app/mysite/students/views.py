@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from faker import Faker
@@ -60,6 +60,14 @@ def generate_students(request):
         output = model_pretty_viewer(student_list)
         return HttpResponse(output)
     return HttpResponse('Method not found')
+
+
+def create_student(request, student_id):
+    if request.method = 'POST':
+        form = StudentFormFromModel(request.POST)
+        if form.is_valid():
+            Student.object.update_or_create(defaults=form.cleaned_data, id=student_id)
+            return HttpResponseRedirect(reverse('list_students'))
 
 
 def groups(request):
